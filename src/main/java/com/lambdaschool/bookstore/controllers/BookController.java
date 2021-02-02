@@ -1,11 +1,15 @@
 package com.lambdaschool.bookstore.controllers;
 
 import com.lambdaschool.bookstore.models.Book;
+import com.lambdaschool.bookstore.models.User;
 import com.lambdaschool.bookstore.services.BookService;
+import com.lambdaschool.bookstore.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.access.channel.SecureChannelProcessor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +32,9 @@ public class BookController
 {
     @Autowired
     BookService bookService;
+
+    @Autowired
+    UserService userService;
 
     // http://localhost:2019/books/books
     @GetMapping(value = "/books",
@@ -96,5 +103,13 @@ public class BookController
     {
         bookService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getuserinfo", produces= "application/json")
+    public ResponseEntity<?> getCurrentUserInfo() {
+        String uname = SecurityContextHolder.getContext().getAuthentication().getName();
+        User u = userService.findByName(uname);
+
+        return new ResponseEntity<>(u, HttpStatus.OK);
     }
 }

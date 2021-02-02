@@ -19,7 +19,7 @@ public class ResourceServerConfig
     private static final String RESOURCE_ID = "resource_id";
 
     @Override
-    public void configure(ResourceServerSecurityConfigurer resources)
+    public void configure(ResourceServerSecurityConfigurer resources) throws Exception
     {
         resources.resourceId(RESOURCE_ID)
                 .stateless(false);
@@ -44,18 +44,23 @@ public class ResourceServerConfig
         // hasAnyRole = must be authenticated and be assigned this role!
         http.authorizeRequests()
                 .antMatchers("/",
-                             "/h2-console/**",
-                             "/swagger-resources/**",
-                             "/swagger-resource/**",
-                             "/swagger-ui.html",
-                             "/v2/api-docs",
-                             "/webjars/**",
-                             "/createnewuser")
+                        "/h2-console/**",
+                        "/swagger-resources/**",
+                        "/swagger-resource/**",
+                        "/swagger-ui.html",
+                        "/v2/api-docs",
+                        "/webjars/**",
+                        "/createnewuser")
                 .permitAll()
+                .antMatchers("/books/books",
+                        "/books/book/{id}")
+                .hasAnyRole("ADMIN", "USER", "DATA")
+                .antMatchers("/books/getuserinfo")
+                .hasAnyRole("ADMIN")
                 .antMatchers("/users/**",
-                             "/useremails/**",
-                             "/oauth/revoke-token",
-                             "/logout")
+                        "/useremails/**",
+                        "/oauth/revoke-token",
+                        "/logout")
                 .authenticated()
                 .antMatchers("/roles/**")
                 .hasAnyRole("ADMIN", "DATA")
