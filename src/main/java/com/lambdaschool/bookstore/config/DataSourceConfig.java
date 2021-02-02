@@ -33,7 +33,7 @@ public class DataSourceConfig {
             return DataSourceBuilder.create()
                     .username("sa")
                     .password("")
-                    .url("jdbc:h2:testdb")
+                    .url("jdbc:h2:mem:testdb")
                     .driverClassName("org.h2.Driver")
                     .build();
         }
